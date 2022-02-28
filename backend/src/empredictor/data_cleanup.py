@@ -109,7 +109,6 @@ class da_price:
 			print("Entry still not found: Attempting cache update")
 			self.update()
 			return self.ddf.retrieve(starting_from, until, 'Day Ahead Price')
-			self.save_to_cache()
 		if thorough:
 			temp_ddf = self.from_entsoe(starting_from, until)
 			return temp_ddf.dataframe['Day Ahead Price']
@@ -126,16 +125,14 @@ class da_price:
 			try:
 				df_to_append = client.query_day_ahead_prices(bidding_zone, start=start, end=end).to_frame('Day Ahead Price')
 			except HTTPError as e:
-				if e.response.status_code == 429:
+				if e.response.status_code == 401:
+					raise IncorrectAPIKey('The API key is incorrect')
+				elif e.response.status_code == 429:
 					if self.verbose:
 						print('Too many requests: waiting for 360 seconds before retrying')
 					time.sleep(360)
 					# retry once
 					df_to_append = client.query_day_ahead_prices(bidding_zone, start=start, end=end).to_frame('Day Ahead Price')
-					# raise RequestFailure({'reason': 'Too many requests'})
-				if e.response.status_code == 401:
-					raise IncorrectAPIKey('The API key is incorrect')
 			# append to full dataframe
 			df = pd.concat([df, df_to_append])
-		ddf = daily_dataframe.from_tz_aware_df(df, self.country, self.time_slots)
-		return ddf
+		return daily_dataframe.from_tz_aware_df(df, self.country, self.time_slots)

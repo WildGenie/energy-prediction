@@ -9,6 +9,5 @@ class AR_model:
 		self.model = AutoReg(180, seasonal=True, trend='ct')
 		self.model.select_order(180)
 		self.model.fit()
-		pass
 	def predict(self, X):
 		pass

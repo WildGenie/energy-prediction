@@ -14,8 +14,8 @@ def mockPandasTimestampNow(tz=None):
 	return pd.Timestamp('20150109 04:00:0000', tz=tz)
 	
 def mock_EntsoePandasClientQueryDayAheadPrice(self, bidding_zone, start=pd.Timestamp('20150101', tz='Europe/Berlin'), end=pd.Timestamp('20150110', tz='Europe/Berlin')):
-	fake_df = pd.read_hdf('tests/test_data/manually_processed_dataframes', key='from_entsoe')
-	return fake_df
+	return pd.read_hdf(
+	    'tests/test_data/manually_processed_dataframes', key='from_entsoe')
 
 class Test_da_price:
 	# TODO: LOT MORE TESTS NEEDED HERE!!! And the tech debt rises...

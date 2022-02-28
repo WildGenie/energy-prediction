@@ -98,8 +98,7 @@ class daily_dataframe:
 		local_df = (
 			pd.concat([duplicate_df, rest_of_df.drop(fake_datetimes_added)])
 		).sort_index()
-		tz_aware_df = local_df.tz_localize(self.country.timezone_name, ambiguous='infer')
-		return tz_aware_df
+		return local_df.tz_localize(self.country.timezone_name, ambiguous='infer')
 	@staticmethod
 	def compare(new_ddf, old_ddf):
 		"""
@@ -126,9 +125,9 @@ class daily_dataframe:
 		}
 		# gather dates with incorrect time slots
 		incorrect_dates = {
-			day: timeslots_of_day 
-			for day, timeslots_of_day in timeslots_by_day.items() 
-			if not (sorted(timeslots_of_day) == sorted(timeslots)) 
+		    day: timeslots_of_day
+		    for day, timeslots_of_day in timeslots_by_day.items()
+		    if sorted(timeslots_of_day) != sorted(timeslots)
 		}
 		if len(incorrect_dates) is not 0:
 			raise InvalidTimeSlots('Invalid Timeslots on {}'.format(list(incorrect_dates.keys())), incorrect_dates)

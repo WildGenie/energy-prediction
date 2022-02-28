@@ -20,8 +20,8 @@ def group_contiguous_points(datetime_list, day_intervals=1):
 	contiguous_backward_mask = np.concatenate([(backward_difference < dt.timedelta(days=-1)), [True]])
 	# zip the index of True
 	contiguous_index = np.concatenate([np.where(contiguous_forward_mask), np.where(contiguous_backward_mask)]).T
-	contiguous_datetimes = [(datetime_list[i1], datetime_list[i2]) for (i1, i2) in contiguous_index.tolist()]
-	return contiguous_datetimes
+	return [(datetime_list[i1], datetime_list[i2])
+	        for (i1, i2) in contiguous_index.tolist()]
 
 # Daylight Savings Time utilities
 # EU specific

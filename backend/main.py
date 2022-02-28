@@ -43,27 +43,26 @@ def root():
 @app.route('/v1/daprices/<dateChosen>')
 @cross_origin()
 def get_daprice(dateChosen):
-	try:
-		day = int(dateChosen[6:8])
-		month = int(dateChosen[4:6])
-		year = int(dateChosen[:4])
-	except(ValueError):
-		return jsonify({
-			'err': 'Your input date is not in the right format'
-		})
-	try:
-		start = pd.Timestamp(dt.datetime(year, month, day, 0, 0), tz='Europe/Berlin')
-		end = pd.Timestamp(dt.datetime(year, month, day, 23, 0), tz='Europe/Berlin')
-	except ValueError as e:
-		return jsonify({
-			'err': str(e)
-		})
-	da_price = da_price_germany.get(start, end)
-	if da_price is not None:
-		da_price.set_index(da_price.index.hour, inplace=True)
-		return jsonify(da_price.to_dict())
-	else:
-		return jsonify({'err': 'No data for this date available.'})
+    try:
+    	day = int(dateChosen[6:8])
+    	month = int(dateChosen[4:6])
+    	year = int(dateChosen[:4])
+    except(ValueError):
+    	return jsonify({
+    		'err': 'Your input date is not in the right format'
+    	})
+    try:
+    	start = pd.Timestamp(dt.datetime(year, month, day, 0, 0), tz='Europe/Berlin')
+    	end = pd.Timestamp(dt.datetime(year, month, day, 23, 0), tz='Europe/Berlin')
+    except ValueError as e:
+    	return jsonify({
+    		'err': str(e)
+    	})
+    da_price = da_price_germany.get(start, end)
+    if da_price is None:
+        return jsonify({'err': 'No data for this date available.'})
+    da_price.set_index(da_price.index.hour, inplace=True)
+    return jsonify(da_price.to_dict())
 
 @app.route('/v1/model/list')
 def list_models():

@@ -28,9 +28,9 @@ class Germany:
 				('DE-AT-LU', start, split_date),
 				('DE-LU', split_date, end)
 			]
-		elif start < split_date and end < split_date:
+		elif start < split_date:
 			return [('DE-AT-LU', start, end)]
-		elif start >= split_date and end >= split_date:
+		elif end >= split_date:
 			return [('DE-LU', start, end)]
 	def get_DST_datetime(self, start, end):
 		"""
